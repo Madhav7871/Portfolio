@@ -4,8 +4,6 @@ import "./App.css";
 const Portfolio = () => {
   const [backendProjects, setBackendProjects] = useState([]);
   const [backendLoading, setBackendLoading] = useState(true);
-  const [githubRepos, setGithubRepos] = useState([]);
-  const [githubLoading, setGithubLoading] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const heroScrollRef = useRef(null);
   const canvasRef = useRef(null);
@@ -28,11 +26,6 @@ const Portfolio = () => {
     "Data Structures & Algorithms",
   ];
 
-  const topGithubRepos = githubRepos
-    .filter((repo) => !repo.fork)
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, 6);
-
   // Fetch projects from your backend API
   useEffect(() => {
     fetch("http://localhost:5000/api/projects")
@@ -44,22 +37,6 @@ const Portfolio = () => {
       .catch((error) => {
         console.error("Error fetching backend projects:", error);
         setBackendLoading(false);
-      });
-  }, []);
-
-  // Fetch repositories directly from your GitHub profile
-  useEffect(() => {
-    fetch("https://api.github.com/users/Madhav7871/repos?sort=updated&per_page=20")
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setGithubRepos(data);
-        }
-        setGithubLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching GitHub repos:", error);
-        setGithubLoading(false);
       });
   }, []);
 
@@ -230,34 +207,6 @@ const Portfolio = () => {
               </span>
             ))}
           </div>
-        </section>
-
-        <section className="projects-section">
-          <h2>GitHub Project Highlights</h2>
-          {githubLoading ? (
-            <p className="loading-text">Loading GitHub projects...</p>
-          ) : (
-            <div className="project-grid">
-              {topGithubRepos.map((repo) => (
-                <article key={repo.id} className="project-card">
-                  <h3>{repo.name}</h3>
-                  <p>{repo.description || "No description added yet."}</p>
-                  <div className="repo-meta">
-                    <span>Stars: {repo.stargazers_count}</span>
-                    <span>Language: {repo.language || "N/A"}</span>
-                  </div>
-                  <a
-                    className="project-link"
-                    href={repo.html_url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View Repository
-                  </a>
-                </article>
-              ))}
-            </div>
-          )}
         </section>
 
         {/* Projects Section */}
