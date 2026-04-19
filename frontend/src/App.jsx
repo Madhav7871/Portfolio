@@ -130,8 +130,15 @@ const Portfolio = () => {
       );
       const drawWidth = loadedImage.width * coverScale * scale;
       const drawHeight = loadedImage.height * coverScale * scale;
+
+      // Keep horizontal center
       const offsetX = (viewportWidth - drawWidth) / 2;
-      const offsetY = (viewportHeight - drawHeight) / 2;
+
+      // FIX: Mobile Image Framing
+      // If screen is narrow (mobile), focus 15% from the top instead of 50% center
+      const isMobile = viewportWidth <= 768;
+      const verticalFocus = isMobile ? 0.15 : 0.5;
+      const offsetY = (viewportHeight - drawHeight) * verticalFocus;
 
       ctx.clearRect(0, 0, viewportWidth, viewportHeight);
       ctx.drawImage(loadedImage, offsetX, offsetY, drawWidth, drawHeight);
@@ -188,7 +195,6 @@ const Portfolio = () => {
     setContactSending(true);
 
     try {
-      // Replaced localhost with your Render backend URL
       const response = await fetch(
         "https://portfolio-iqqn.onrender.com/api/contact",
         {
@@ -224,7 +230,14 @@ const Portfolio = () => {
       {/* Mobile Responsiveness Styles */}
       <style>{`
         @media (max-width: 768px) {
-          .hero-overlay { padding: 0 20px; text-align: center; }
+          .hero-overlay { 
+            padding: 0 20px; 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 40vh; /* FIX: Pushes text below your face */
+          }
           .hero-name { font-size: 2.5rem !important; }
           .hero-role { font-size: 1.2rem !important; margin-bottom: 20px; }
           .hero-actions { display: flex; flex-direction: column; width: 100%; align-items: center; gap: 15px; }
