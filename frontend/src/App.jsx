@@ -364,7 +364,7 @@ const Portfolio = () => {
             </div>
           </div>
 
-          <div className="scroll-hint">Scroll Down</div>
+          {/* <div className="scroll-hint">Scroll Down</div> */}
         </div>
       </section>
 
